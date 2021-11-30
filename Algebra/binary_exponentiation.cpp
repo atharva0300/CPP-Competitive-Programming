@@ -37,6 +37,69 @@ long long binpow2(long long a , long long b)
     return res;
 }
 
+
+int bin1(int a , int n)
+{
+    if(n==0)
+    {
+        return 1;
+    }
+    else if(n%2==0)
+    {
+        // n is even 
+        return bin1(a*a , n/2);
+    }
+    else
+    {
+        // n is odd 
+        return a * bin1(a*a , (n-1)/2);
+    }
+}
+
+int bin2(int a , int n)
+{
+    int result = 1;
+    while(n>0)
+    {
+       if(n%2==1)
+       {
+           result = result *a;
+       }
+       a = a*a;
+       n = n/2;
+    }
+    return result;
+}
+
+
+// modular exponentiation - recursive 
+int modularExponentiation(int x,int n,int M)
+{
+    if(n==0)
+        return 1;
+    else if(n%2 == 0)        //n is even
+        return modularExponentiation((x*x)%M,n/2,M);
+    else                             //n is odd
+        return (x*modularExponentiation((x*x)%M,(n-1)/2,M))%M;
+
+}
+
+
+const int M = 1e9 +7;
+// modular exponentiation - iterative 
+int modularExponentiation2(int x,int n,int M)
+{
+    int result=1;
+    while(n>0)
+    {
+        if(n % 2 ==1)
+            result=(result * x)%M;
+        x=(x*x)%M;
+        n=n/2;
+    }
+    return result;
+}
+
 int main()
 {
 
@@ -54,5 +117,11 @@ int main()
     cout<<binpow(a,b)<<"\n";
 
     cout<<binpow2(a , b)<<"\n";
+
+    cout<<bin1(a,b)<<"\n";
+    cout<<bin2(a,b)<<"\n";
+
+    cout<<modularExponentiation(a,b,M)<<"\n";
+    cout<<modularExponentiation2(a,b,M)<<"\n";
     return 0;
 }
