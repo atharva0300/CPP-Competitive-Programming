@@ -65,27 +65,62 @@ void deletionAtSpecificPositionRecursive(Node* temp , int counter, int position)
     }
 }
 
-void deletionOfGivenKey(Node* head , int key){
-    Node* temp = head;
-    while(temp->next->data!=key){
+void deletionOfGivenKey(Node** head , int key){
+    Node* temp = (*head);
+    Node* prev = NULL;
+
+    if(prev==NULL && temp->data==key){
+        prev = temp;
+        temp = temp->next;
+        prev->next = NULL;
+        (*head) = temp;
+        return;
+    }
+
+    while(temp->data!=key){
+        prev = temp;
         temp = temp->next;
     }
-    Node* temp2 = temp->next->next;
-    temp->next->next = nullptr;
-    temp->next = temp2;
+    Node* temp2 = temp->next;
+    temp->next = nullptr;
+    prev->next = temp2;
     return;
 }
 
-void deletionOfGivenKeyRecursive(Node* temp , int key){
-    if(temp->next->data==key){
-        Node* temp2 = temp->next->next;
-        temp->next->next = NULL;
-        temp->next = temp2;
+void deletionOfGivenKeyRecursive(Node** head, int key) {
+    Node* temp = *head;
+    Node* prev = NULL;
+
+    // Base case: If key is not found
+    if (temp == NULL) return;
+
+    // If key is found at first position
+    if (temp->data == key) {
+        *head = temp->next;
+        delete temp;
+        deletionOfGivenKeyRecursive(head, key); // Check for more occurrences of key
         return;
-    }else{
-        return deletionOfGivenKeyRecursive(temp->next , key);
     }
+
+    // Search for the key to be deleted, keep track of the previous node
+    while (temp != NULL && temp->data != key) {
+        prev = temp;
+        temp = temp->next;
+    }
+
+    // If key was not present in linked list
+    if (temp == NULL) return;
+
+    // Unlink the node from linked list
+    prev->next = temp->next;
+
+    // Free memory
+    delete temp;
+
+    // Recursive call to check for more occurrences of key
+    deletionOfGivenKeyRecursive(head, key);
 }
+
 
 int main(){
     Node* first = new Node{1};
@@ -95,6 +130,7 @@ int main(){
     Node* fifth = new Node{5};
     Node* sixth = new Node{6};
     Node* seventh = new Node{7};
+    Node*eight = new Node{8};
 
     first->next = second;
     second->next = third;
@@ -102,6 +138,7 @@ int main(){
     fourth->next = fifth;
     fifth->next = sixth;
     sixth->next = seventh;
+    seventh->next = eight;
 
     cout<<"Before deletion : ";
     traverseLinkedList(first);
@@ -118,10 +155,10 @@ int main(){
     deletionAtSpecificPositionRecursive(temp , 0, 2);
     cout<<"\nAfter recursive deletion : ";
     traverseLinkedList(first);
-    deletionOfGivenKey(first , 2);
+    deletionOfGivenKey(&first , 2);
     cout<<"\nAfter deletion of given key ( iterative ) : ";
     traverseLinkedList(first);
-    deletionOfGivenKeyRecursive(first , 6);
+    deletionOfGivenKeyRecursive(&first , 6);
     cout<<"\nAfter deletion of given key ( recursive ): ";
     traverseLinkedList(first);
     
