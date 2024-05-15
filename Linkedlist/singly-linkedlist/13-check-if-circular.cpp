@@ -50,8 +50,5 @@ int main(){
     third->next = NULL;
     cout<<"is circular? : "<<checkCircular(&first)<<"\n";
     
-
-    
-    
     return 0;
 }
